@@ -7,4 +7,4 @@ class Game(Resource):
     def get(self):
         if request.method == "GET":
             """Play Tic Tac Toe"""
-            return play_game()
+            return play_game(request)
