@@ -1,5 +1,7 @@
 import random
 
+from app.main.utils.helpers import response
+
 
 def is_game_won(board, player):
 	"""
@@ -50,3 +52,55 @@ def random_move(board):
 	
 	else:
 		return board
+
+
+def is_draw(board):
+	"""
+	Check if game is a draw
+	"""
+	user_player = is_game_won(board, 'x')
+	server_player = is_game_won(board, 'o')
+
+	if not user_player['won'] and not server_player['won']:
+		draw_game = board.find(' ')
+		if draw_game < 0:
+			return True
+		
+		else:
+			return False
+	
+	else:
+		return False
+
+
+def server_play(board):
+	"""
+	Server plays
+	returns the response which contains
+	the board with the servers play
+	"""
+	random_server_play = random_move(board)
+
+	# check if server has won the current game
+	if is_game_won(random_server_play, 'o')['won']:
+		return response(
+			'Player ' + is_game_won(random_server_play, 'o')['player'] + ' has won the game!!!',
+			board,
+			200
+		)
+
+	# check if current board is a draw
+	elif is_draw(random_server_play):
+		return response(
+			'Draw!!!',
+			random_server_play,
+			200
+		)
+
+	# next turn
+	else:
+		return response(
+			'Your turn',
+			random_server_play,
+			200
+		)

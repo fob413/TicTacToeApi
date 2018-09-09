@@ -1,5 +1,6 @@
 import unittest
 import os
+import json
 from app.test.base import BaseTestCase
 from app import create_app
 
@@ -35,13 +36,23 @@ class TicTacToeTestCase(BaseTestCase):
 		self.assertEqual(res.status_code, 400)
 
 	
-	def test_tictactoe_invalid_board_4(self):
+	def test_tictactoe_invalid_player_turn(self):
 		"""Test the server throws an error on invalid player turns"""
 		res = self.client().get('/?board=+++++++xx')
 		self.assertEqual(res.status_code, 400)
 
 
-	def test_tictactoe_invalid_board_5(self):
+	def test_tictactoe_invalid_player_turn_2(self):
 		"""Test the server throws an error on invalid player turns"""
 		res = self.client().get('/?board=xxx+ooooo')
 		self.assertEqual(res.status_code, 400)
+
+
+	def test_tictactoe_draw(self):
+		"""Test when the game is a draw"""
+		res = self.client().get('/?board=xoxxoooxx')
+		self.assertEqual(res.status_code, 200)
+		expected_message = 'Draw!!!'
+		result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+		self.assertEqual(result_in_json['message'],
+    		expected_message)
