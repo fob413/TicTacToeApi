@@ -1,5 +1,5 @@
 def board_is_present(board):
-	"""validate user sent a board"""
+	"""validate board exists"""
 	if board:
 		return True
 	else:
@@ -16,7 +16,7 @@ def validate_length(board):
 
 
 def validate_characters(board):
-	"""validate player and servers characters"""
+	"""validate player and server characters"""
 	allowed_characters = set('xo ')
 	if set(board).issubset(allowed_characters):
 		return True
@@ -38,7 +38,7 @@ def validate_turn(board):
 
 
 def board_is_valid(board):
-	"""validate board is valid"""
+	"""validate board"""
 	if (board_is_present(board) and
 		validate_length(board) and
 		validate_characters(board) and

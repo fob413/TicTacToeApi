@@ -11,6 +11,11 @@ class DevelopmentConfig(Config):
     DEBUG = True
 
 
+class TestConfig(Config):
+    DEBUG = True
+
+
 config_by_name = dict(
     dev=DevelopmentConfig,
+    testing=TestConfig,
 )
