@@ -1,52 +1,57 @@
 from flask import jsonify
 from app.main.utils.validation import board_is_valid
-from app.main.utils.game import is_game_won, random_move
+from app.main.utils.game import is_game_won, random_move, is_draw, server_play
+from app.main.utils.helpers import response
 
 def play_game(request):
     """Let's play tic tac toe"""
     try:
         board = request.args.get('board').lower()
 
+        # validate board is valid
         if board_is_valid(board):
             user_player = is_game_won(board, 'x')
             server_player = is_game_won(board, 'o')
 
             # check whether the player or the server has won the current game
             if user_player['won']:
-                response_object = {
-                    'message': 'Player ' + user_player['player'] + ' has won the game!!!',
-                    'board': board
-                }
-
-                return response_object, 200
+                return response(
+                    'Player ' + user_player['player'] + ' has won the game!!!',
+                    board,
+                    200
+                )
 
             elif server_player['won']:
-                response_object = {
-                    'message': 'Player ' + server_player['player'] + ' has won the game!!!',
-                    'board': board
-                }
+                return response(
+                    'Player ' + server_player['player'] + ' has won the game!!!',
+                    board,
+                    200
+                )
 
-                return response_object, 200
+            # check if current board is a draw
+            elif is_draw(board):
+                return response(
+                    'Draw!!!',
+                    board,
+                    200
+                )
 
             # the server plays
             else:
-                response_object = {
-                    'message': 'Your turn',
-                    'board': random_move(board)
-                }
+                return server_play(board)
 
-                return response_object, 200
-
+        # invalid board response
         else:
-            response_object = {
-                'message': 'invalid board'
-            }
-
-            return response_object, 400
+            return response(
+                    'invalid board',
+                    board,
+                    400
+                )
 
     except:
-        response_object = {
-            'message': "Let's play Tic-Tac-Toe"
-        }
-
-        return response_object, 200
+        return response(
+                    "Let's play Tic-Tac-Toe",
+                    '         ',
+                    200
+                )
+        
