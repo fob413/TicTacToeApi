@@ -4,38 +4,49 @@ from app.main.utils.game import is_game_won, random_move
 
 def play_game(request):
     """Let's play tic tac toe"""
-    board = request.args.get('board').lower()
+    try:
+        board = request.args.get('board').lower()
 
-    if board_is_valid(board):
-        user_player = is_game_won(board, 'x')
-        server_player = is_game_won(board, 'o')
+        if board_is_valid(board):
+            user_player = is_game_won(board, 'x')
+            server_player = is_game_won(board, 'o')
 
-        if user_player['won']:
-            response_object = {
-                'message': 'Congratulations, you have won the game!!!',
-                'board': board
-            }
+            # check whether the player or the server has won the current game
+            if user_player['won']:
+                response_object = {
+                    'message': 'Player ' + user_player['player'] + ' has won the game!!!',
+                    'board': board
+                }
 
-            return response_object, 200
+                return response_object, 200
 
-        elif server_player['won']:
-            response_object = {
-                'message': 'Sorry, the computer has won this game!!!',
-                'board': board
-            }
+            elif server_player['won']:
+                response_object = {
+                    'message': 'Player ' + server_player['player'] + ' has won the game!!!',
+                    'board': board
+                }
 
-            return response_object, 200
+                return response_object, 200
+
+            # the server plays
+            else:
+                response_object = {
+                    'message': 'Your turn',
+                    'board': random_move(board)
+                }
+
+                return response_object, 200
+
         else:
             response_object = {
-                'message': 'successfully hit this endpoint to play the game',
-                'board': random_move(board)
+                'message': 'invalid board'
             }
 
-            return response_object, 200
+            return response_object, 400
 
-    else:
+    except:
         response_object = {
-            'message': 'invalid board'
+            'message': "Let's play Tic-Tac-Toe"
         }
 
-        return response_object, 400
+        return response_object, 200

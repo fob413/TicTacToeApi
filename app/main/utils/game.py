@@ -31,6 +31,10 @@ def is_game_won(board, player):
 
 
 def random_move(board):
+	"""
+	Server plays randomly
+	returns the board with the servers play
+	"""
 	possible_moves = []
 	board_copy = list(board)
 
