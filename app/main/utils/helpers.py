@@ -35,3 +35,9 @@ possible_moves = [
 	[[4, 6], 2],
 	[[2, 6], 4],
 ]
+
+
+optimal_moves_one=[
+	[4],
+	[0, 2, 6, 8]
+]

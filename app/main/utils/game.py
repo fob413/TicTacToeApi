@@ -1,6 +1,6 @@
 import random
 
-from app.main.utils.helpers import response, possible_moves
+from app.main.utils.helpers import response, possible_moves, optimal_moves_one
 
 
 def is_game_won(board, player):
@@ -73,6 +73,54 @@ def is_draw(board):
 		return False
 
 
+def optimal_play_one(board):
+	"""
+	Server possible optimal play
+	returns the response which contains
+	the new board
+	"""
+	board_copy = list(board)
+	play = random.choice(optimal_moves_one)
+
+	if len(play) == 1:
+		board_copy[play[0]] = 'o'
+		return ''.join(board_copy)
+	else:
+		move = random.choice(play)
+		board_copy[move] = 'o'
+		return ''.join(board_copy)
+
+
+def optimal_play_two(board):
+	"""
+	Server's possible optimal play
+	returns the response which contains
+	the new board
+	"""
+	board_copy = list(board)
+	player_move = board.find('x')
+	optimal_moves = set('40268')
+
+	# check player played in an optimal point
+	if str(player_move) in optimal_moves:
+		corner_move = set('0268')
+		center_move = set('4')
+		
+		# check player's move and counter
+		if str(player_move) in center_move:
+			move = random.choice([0, 2, 6, 8])
+			board_copy[move] = 'o'
+			return ''.join(board_copy)
+
+		else:
+			board_copy[4] = 'o'
+			return ''.join(board_copy)
+
+	# play the first optimal strategy
+	else:
+		return optimal_play_one(board)
+
+
 def defense_win_play(possible_moves, board):
 	"""
 	Server blocks a possible user win or
@@ -119,56 +167,75 @@ def server_play(board):
 	the board with the servers play
 	"""
 
-	server_move = defense_win_play(possible_moves, board)
+	# optimal play on an empty board
+	if not board.count('x') and not board.count('o'):
+		return response(
+			'Your turn',
+			optimal_play_one(board),
+			200
+		)
 
-	if server_move['played']:
-		# check if server has won the current game
-		if is_game_won(server_move['board'], 'o')['won']:
-			return response(
-				'Player o has won the game!!!',
-				server_move['board'],
-				200
-			)
-
-		# check if current board is a draw
-		elif is_draw(server_move['board']):
-			return response(
-				'Draw!!!',
-				server_move['board'],
-				200
-			)
-
-		else:
-			return response(
-				'Your turn',
-				server_move['board'],
-				200
-			)
+		
+	# optimal play when the server plays second
+	elif board.count('x') + board.count('o') == 1:
+		print('play 2>>>>>>')
+		return response(
+			'Your turn',
+			optimal_play_two(board),
+			200
+		)
 
 	else:
-		# random server play
-		random_server_play = random_move(board)
+		server_move = defense_win_play(possible_moves, board)
 
-		# check if server has won the current game
-		if is_game_won(random_server_play, 'o')['won']:
-			return response(
-				'Player ' + is_game_won(random_server_play, 'o')['player'] + ' has won the game!!!',
-				random_server_play,
-				200
-			)
+		if server_move['played']:
+			# check if server has won the current game
+			if is_game_won(server_move['board'], 'o')['won']:
+				return response(
+					'Player o has won the game!!!',
+					server_move['board'],
+					200
+				)
 
-		# check if current board is a draw
-		elif is_draw(random_server_play):
-			return response(
-				'Draw!!!',
-				random_server_play,
-				200
-			)
+			# check if current board is a draw
+			elif is_draw(server_move['board']):
+				return response(
+					'Draw!!!',
+					server_move['board'],
+					200
+				)
 
-		# next turn
+			else:
+				return response(
+					'Your turn',
+					server_move['board'],
+					200
+				)
+
 		else:
-			return response(
-				'Your turn',
-				random_server_play,
-				200
-			)
+			# random server play
+			random_server_play = random_move(board)
+
+			# check if server has won the current game
+			if is_game_won(random_server_play, 'o')['won']:
+				return response(
+					'Player ' + is_game_won(random_server_play, 'o')['player'] + ' has won the game!!!',
+					random_server_play,
+					200
+				)
+
+			# check if current board is a draw
+			elif is_draw(random_server_play):
+				return response(
+					'Draw!!!',
+					random_server_play,
+					200
+				)
+
+			# next turn
+			else:
+				return response(
+					'Your turn',
+					random_server_play,
+					200
+				)
