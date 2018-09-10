@@ -85,9 +85,9 @@ def defense_win_play(possible_moves, board):
 		'board': ''.join(board_copy)
 	}
 
-	# block possible user win
+	# server possible win
 	for move in possible_moves:
-		if board_copy[move[0][0]] == board_copy[move[0][1]] == 'x':
+		if board_copy[move[0][0]] == board_copy[move[0][1]] == 'o':
 			# validate the possible move
 			if board_copy[move[1]] != ' ':
 				continue
@@ -97,9 +97,9 @@ def defense_win_play(possible_moves, board):
 			server_move['board'] = ''.join(board_copy)
 			return server_move
 
-	# server possible win
+	# block possible user win
 	for move in possible_moves:
-		if board_copy[move[0][0]] == board_copy[move[0][1]] == 'o':
+		if board_copy[move[0][0]] == board_copy[move[0][1]] == 'x':
 			# validate the possible move
 			if board_copy[move[1]] != ' ':
 				continue
