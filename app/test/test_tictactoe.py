@@ -48,6 +48,12 @@ class TicTacToeTestCase(BaseTestCase):
 		self.assertEqual(res.status_code, 400)
 
 
+	def test_tictactoe_invalid_player_turn_3(self):
+		"""Test the server throws an error on invalid player turns"""
+		res = self.client().get('/?board=oxox++++o')
+		self.assertEqual(res.status_code, 400)
+
+
 	def test_tictactoe_draw(self):
 		"""Test when the game is a draw"""
 		res = self.client().get('/?board=xoxxoooxx')
@@ -55,4 +61,34 @@ class TicTacToeTestCase(BaseTestCase):
 		expected_message = 'Draw!!!'
 		result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
 		self.assertEqual(result_in_json['message'],
+    		expected_message)
+
+
+	def test_tictactoe_server_blocks_player(self):
+		"""Test the server blocks a possible player win"""
+		res = self.client().get('/?board=xx+o+++++')
+		self.assertEqual(res.status_code, 200)
+		expected_message = 'xxoo     '
+		result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+		self.assertEqual(result_in_json['board'],
+    		expected_message)
+
+
+	def test_tictactoe_server_wins(self):
+		"""Test the server wins when possible"""
+		res = self.client().get('/?board=oo+x+xox+')
+		self.assertEqual(res.status_code, 200)
+		expected_message = 'ooox xox '
+		result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+		self.assertEqual(result_in_json['board'],
+    		expected_message)
+
+	
+	def test_tictactoe_server_plays_draw(self):
+		"""Test the server plays a draw"""
+		res = self.client().get('/?board=ooxxxoox+')
+		self.assertEqual(res.status_code, 200)
+		expected_message = 'ooxxxooxo'
+		result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+		self.assertEqual(result_in_json['board'],
     		expected_message)

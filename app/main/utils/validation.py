@@ -28,7 +28,7 @@ def validate_turn(board):
 	"""validate who's turn is next"""
 	server_play = board.count('o')
 	user_play = board.count('x')
-	difference = abs(user_play - server_play)
+	difference = user_play - server_play
 
 	if difference is 0 or difference is 1:
 		return True
