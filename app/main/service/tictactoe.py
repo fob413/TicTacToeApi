@@ -1,6 +1,6 @@
 from flask import jsonify
 from app.main.utils.validation import board_is_valid
-from app.main.utils.game import is_game_won, random_move, is_draw, server_play
+from app.main.utils.game import is_game_won, random_move, is_draw, server_play, convert_board
 from app.main.utils.helpers import response
 
 def play_game(request):
@@ -14,22 +14,22 @@ def play_game(request):
             server_player = is_game_won(board, 'o')
 
             # check whether the player or the server has won the current game
-            if user_player['won']:
+            if user_player:
                 return response(
-                    'Player ' + user_player['player'] + ' has won the game!!!',
+                    'Player x has won the game!!!',
                     board,
                     200
                 )
 
-            elif server_player['won']:
+            elif server_player:
                 return response(
-                    'Player ' + server_player['player'] + ' has won the game!!!',
+                    'Player o has won the game!!!',
                     board,
                     200
                 )
 
             # check if current board is a draw
-            elif is_draw(board):
+            elif is_draw(convert_board(board)):
                 return response(
                     'Draw!!!',
                     board,
