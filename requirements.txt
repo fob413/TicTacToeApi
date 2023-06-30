@@ -8,7 +8,7 @@ Flask-RESTful==0.3.10
 Flask-Script==2.0.6
 Flask-Testing==0.7.1
 gunicorn==19.9.0
-itsdangerous==0.24
+itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
 pycparser==2.18
