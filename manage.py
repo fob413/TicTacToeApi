@@ -1,20 +1,22 @@
 import os
 import unittest
 
+from flask.cli import FlaskGroup
 from app import app
-from flask_script import Manager
 from app.main import create_app
 
 
-manager = Manager(app)
+cli = FlaskGroup(app)
 
 
-@manager.command
+@app.shell_context_processor
+@cli.command('run')
 def run():
     app.run()
 
 
-@manager.command
+@app.shell_context_processor
+@cli.command('test')
 def test():
     """Runs the unit tests"""
     tests = unittest.TestLoader().discover('app/test', pattern='test*.py')
@@ -26,4 +28,4 @@ def test():
 
 
 if __name__ == '__main__':
-    manager.run()
+    cli()
