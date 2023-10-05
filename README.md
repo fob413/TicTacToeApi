@@ -6,7 +6,7 @@ Tic-tac-toe (also known as noughts and crosses or Xs and Os) is a paper-and-penc
 This API plays the game against the API server.
 
 # Hosted Link
-```https://tictactoeapi-funsho.herokuapp.com```
+<a href="https://oluwafunso-tic-tac-toe-e4ede6842e36.herokuapp.com/" target="_blank">https://oluwafunso-tic-tac-toe-e4ede6842e36.herokuapp.com/</a>
 
 ## How To Play
 ### Query String
